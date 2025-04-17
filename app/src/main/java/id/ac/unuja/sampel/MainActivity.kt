@@ -9,6 +9,7 @@ import id.ac.unuja.sampel.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding : ActivityMainBinding
+    private lateinit var sessionManager: SessionManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -16,10 +17,23 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        sessionManager = SessionManager(this)
+
+        if(sessionManager.isLoggedIn()) {
+            val intent = Intent(this, menu::class.java).apply {
+                putExtra("nama", sessionManager.getData()[SessionManager.KEY_USERNAME])
+            }
+            startActivity(intent)
+            finish()
+        }
+
         binding.btLogin.setOnClickListener {
             val namaPengguna = binding.etNamaPengguna.text.toString()
             val kataKunci = binding.etKataKunci.text.toString()
             if (validateInput(namaPengguna, kataKunci)) {
+
+                sessionManager.saveLogin(namaPengguna, kataKunci)
+
                 val intent = Intent(this,menu::class.java)
                 intent.putExtra("nama",namaPengguna)
                 startActivity(intent)
