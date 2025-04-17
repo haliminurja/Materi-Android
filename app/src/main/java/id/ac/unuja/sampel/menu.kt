@@ -1,20 +1,32 @@
 package id.ac.unuja.sampel
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import id.ac.unuja.sampel.databinding.ActivityMenuBinding
 
 class menu : AppCompatActivity() {
+
+    private lateinit var binding: ActivityMenuBinding
+    private lateinit var sessionManager: SessionManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_menu)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
+        binding = ActivityMenuBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        sessionManager = SessionManager(this)
+
+        binding.tvNamaPengguna.text = sessionManager.getData()[SessionManager.KEY_USERNAME]
+
+        binding.btLogout.setOnClickListener {
+            sessionManager.logout()
+            startActivity(Intent(this, MainActivity::class.java))
+            finish()
         }
     }
 }
