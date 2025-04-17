@@ -1,52 +1,70 @@
 package id.ac.unuja.sampel.server.adapter
 
 import android.content.Context
-import android.content.Intent
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import id.ac.unuja.sampel.R
-import id.ac.unuja.sampel.server.api.Note
-import id.ac.unuja.sampel.server.api.NoteResponse
+import id.ac.unuja.sampel.databinding.ListItemBinding
+import id.ac.unuja.sampel.server.api.NoteResponseList
 
-class ListAdapter (private var notes: List<NoteResponse>, context: Context) :
+class ResultAdapter(
+    private val context: Context,
+    private val onNoteAction: (NoteAction, NoteResponseList.Note) -> Unit
+) : ListAdapter<NoteResponseList.Note, ResultAdapter.NoteViewHolder>(NoteDiffCallback()) {
 
-    RecyclerView.Adapter<ListAdapter.NoteViewHolder>() {
-    class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val titleTextView: TextView = itemView.findViewById(R.id.titleTextView)
-        val contentTextView: TextView = itemView.findViewById(R.id.contentTextView)
-        val updateButton: ImageView = itemView.findViewById(R.id.updatButton)
-        val deleteButton: ImageView = itemView.findViewById(R.id.deleteButton)
+    sealed class NoteAction {
+        object Update : NoteAction()
+        object Delete : NoteAction()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.list_item, parent, false)
-        return NoteViewHolder(view)
-    }
-
-    override fun getItemCount(): Int {
-        return notes.size
+        val binding = ListItemBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
+        return NoteViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: NoteViewHolder, position: Int) {
-        val note = notes[position]
-        holder.titleTextView.text = note.title
-        holder.contentTextView.text = note.content
+        holder.bind(getItem(position))
+    }
 
-        holder.updateButton.setOnClickListener{
+    inner class NoteViewHolder(
+        private val binding: ListItemBinding
+    ) : RecyclerView.ViewHolder(binding.root) {
 
-        }
-        holder.deleteButton.setOnClickListener{
+        fun bind(note: NoteResponseList.Note) {
+            binding.apply {
+                titleTextView.text = note.title
+                contentTextView.text = note.content
 
+                updateButton.setOnClickListener {
+                    onNoteAction(NoteAction.Update, note)
+                }
+
+                deleteButton.setOnClickListener {
+                    onNoteAction(NoteAction.Delete, note)
+                }
+            }
         }
     }
 
-    fun refreshData(newNotes: List<NoteResponse>) {
-        notes = newNotes
-        notifyDataSetChanged()
+    private class NoteDiffCallback : DiffUtil.ItemCallback<NoteResponseList.Note>() {
+        override fun areItemsTheSame(
+            oldItem: NoteResponseList.Note,
+            newItem: NoteResponseList.Note
+        ): Boolean = oldItem.id == newItem.id
+
+        override fun areContentsTheSame(
+            oldItem: NoteResponseList.Note,
+            newItem: NoteResponseList.Note
+        ): Boolean = oldItem == newItem
+    }
+
+    fun updateNotes(notes: List<NoteResponseList.Note>) {
+        submitList(notes.toMutableList())
     }
 }

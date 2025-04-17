@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import id.ac.unuja.sampel.databinding.ActivityMenuBinding
+import id.ac.unuja.sampel.server.view.Login
 import id.ac.unuja.sampel.sqlite.ListData
 
 class menu : AppCompatActivity() {
@@ -26,6 +27,9 @@ class menu : AppCompatActivity() {
 
         binding.btSqlite.setOnClickListener {
             startActivity(Intent(this, ListData::class.java))
+        }
+        binding.btRestApi.setOnClickListener {
+            startActivity(Intent(this, Login::class.java))
         }
 
         binding.btLogout.setOnClickListener {

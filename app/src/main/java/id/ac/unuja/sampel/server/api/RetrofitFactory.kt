@@ -5,6 +5,7 @@ import okhttp3.Cache
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Response
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
@@ -37,6 +38,9 @@ object RetrofitFactory {
             .create(Api::class.java)
     }
 
+    private val loggingInterceptor: HttpLoggingInterceptor = HttpLoggingInterceptor().apply {
+        level = HttpLoggingInterceptor.Level.BODY
+    }
     private fun createOkHttpClient(context: Context): OkHttpClient {
         return OkHttpClient.Builder().apply {
             cache(Cache(context.cacheDir, CACHE_SIZE.toLong()))
@@ -45,6 +49,7 @@ object RetrofitFactory {
             writeTimeout(30, TimeUnit.SECONDS)
             retryOnConnectionFailure(true)
             addInterceptor(AuthInterceptor(context))
+            addInterceptor(loggingInterceptor)
         }.build()
     }
 
