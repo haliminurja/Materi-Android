@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
-    android:gravity="center"
     android:orientation="vertical"
     android:padding="16dp">
 
@@ -23,6 +22,16 @@
         android:layout_marginBottom="24dp"
         android:text="Nama Pengguna"
         android:textSize="18sp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/bt_sqlite"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginBottom="5dp"
+        android:backgroundTint="#F35C21"
+        android:text="CRUD Sqlite"
+        android:textAllCaps="false"
+        android:textSize="16sp" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/bt_logout"

@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import id.ac.unuja.sampel.databinding.ActivityMenuBinding
+import id.ac.unuja.sampel.sqlite.ListData
 
 class menu : AppCompatActivity() {
 
@@ -22,6 +23,10 @@ class menu : AppCompatActivity() {
         sessionManager = SessionManager(this)
 
         binding.tvNamaPengguna.text = sessionManager.getData()[SessionManager.KEY_USERNAME]
+
+        binding.btSqlite.setOnClickListener {
+            startActivity(Intent(this, ListData::class.java))
+        }
 
         binding.btLogout.setOnClickListener {
             sessionManager.logout()
