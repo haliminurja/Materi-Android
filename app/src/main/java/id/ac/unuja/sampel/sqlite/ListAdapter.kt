@@ -18,7 +18,7 @@ class ListAdapter (private var notes: List<Note>, context: Context) :
     class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val titleTextView: TextView = itemView.findViewById(R.id.titleTextView)
         val contentTextView: TextView = itemView.findViewById(R.id.contentTextView)
-        val updateButton: ImageView = itemView.findViewById(R.id.updatButton)
+        val updateButton: ImageView = itemView.findViewById(R.id.updateButton)
         val deleteButton: ImageView = itemView.findViewById(R.id.deleteButton)
     }
 
