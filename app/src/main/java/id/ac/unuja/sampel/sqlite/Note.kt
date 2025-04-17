@@ -1,3 +1,3 @@
 package id.ac.unuja.sampel.sqlite
 
-class Note 
+data class Note(val id : Int, val title: String, val content: String)
